@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Monitoring Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Page 1: Camera Overview -->
+        <div id="page1" class="page active">
+            <div class="header">
+                <h1>Camera Monitoring Dashboard</h1>
+                <p>Real-time surveillance and violation tracking system</p>
+            </div>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search by location or camera ID..." id="cameraSearch">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+
+            <div class="camera-grid" id="cameraGrid">
+                <!-- Camera cards will be populated here -->
+            </div>
+        </div>
+
+        <!-- Page 2: Violations Table -->
+        <div id="page2" class="page">
+            <button class="back-btn" onclick="showPage('page1')">← Back to Dashboard</button>
+            
+            <div class="header">
+                <h1 id="cameraTitle">Camera Violations</h1>
+                <p id="cameraSubtitle">Detailed violation records</p>
+            </div>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search by number plate or timestamp..." id="violationSearch">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+
+            <div class="table-container glass">
+                <table class="violations-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>Beacon ID</th>
+                            <th>Number Plate</th>
+                            <th>Violations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="violationsTableBody">
+                        <!-- Violations will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Page 3: Profile Page -->
+        <div id="page3" class="page">
+            <button class="back-btn" onclick="showPage('page2')">← Back to Violations</button>
+            
+            <div class="header">
+                <h1>Vehicle Owner Profile</h1>
+                <p>Detailed owner and vehicle information</p>
+            </div>
+
+            <div class="profile-container">
+                <div class="side-panel glass-card">
+                    <h3>Recent Scans</h3>
+                    <div id="recentScans">
+                        <!-- Recent scans will be populated here -->
+                    </div>
+                </div>
+
+                <div class="profile-card glass">
+                    <div class="profile-image" id="profileImage">
+                        RM
+                    </div>
+                    <div class="profile-info">
+                        <h3 id="profileName">Loading...</h3>
+                        <p><strong>Date of Birth:</strong> <span id="profileDob"></span></p>
+                        <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
+                        <p><strong>Address:</strong> <span id="profileAddress"></span></p>
+                        <p><strong>Number Plate:</strong> <span id="profilePlate"></span></p>
+                        <p><strong>Marital Status:</strong> <span id="profileMarital"></span></p>
+                        <p><strong>Registered Vehicles:</strong></p>
+                        <div class="vehicle-buttons" id="vehicleButtons">
+                            <!-- Vehicle buttons will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="side-panel glass-card">
+                    <h3>Recent Violations</h3>
+                    <div id="recentViolations">
+                        <!-- Recent violations will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
