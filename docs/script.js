@@ -451,7 +451,7 @@ const mockData = {
   },
 };
 
-let apiUrl = `http://127.0.0.1:8000/`
+let apiUrl = `https://django-api.sreedevss.me/api/`
 
 let currentCamera = null;
 let currentPlate = null;
@@ -489,38 +489,50 @@ function setupEventListeners() {
     .addEventListener("input", filterViolations);
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
 
-  const username = document.getElementById("username").value;
+  const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
   const rememberMe = document.getElementById("rememberMe").checked;
 
-  // Validate credentials
-  if (mockData.users[username] && mockData.users[username] === password) {
-    // Store login state
-    sessionStorage.setItem("isLoggedIn", "true");
-    sessionStorage.setItem("username", username);
+  try {
+    const response = await fetch(`${apiUrl}login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    })
 
-    if (rememberMe) {
-      localStorage.setItem("rememberedUser", username);
+    const data = await response.json();
+
+    if (response.ok) {
+      sessionStorage.setItem("isLoggedIn", "true");
+      sessionStorage.setItem("username", username);
+
+      if (rememberMe) {
+        localStorage.setItem("rememberedUser", username);
+      }
+
+      // Animate success
+      const loginBtn = document.querySelector(".login-btn");
+      loginBtn.innerHTML = '<span class="btn-text">Success!</span>';
+      loginBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+
+      setTimeout(() => {
+        anime();
+        showDashboard();
+      }, 1000);
+    } else {
+      showLoginError(data.message || "Invalid username or password");
     }
-
-    // Show success animation
-    const loginBtn = document.querySelector(".login-btn");
-    loginBtn.innerHTML = '<span class="btn-text">Success!</span>';
-    loginBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-
-    // Navigate to dashboard after short delay
-    setTimeout(() => {
-      anime();
-      showDashboard();
-    }, 1000);
-  } else {
-    // Show error
-    showLoginError("Invalid username or password");
+  } catch (error) {
+    console.error("Login error:", error);
+    showLoginError("An error occurred. Please try again.");
   }
 }
+
 
 function showLoginError(message) {
   // Remove existing error
@@ -574,23 +586,30 @@ function logout() {
   showPage("loginPage");
 }
 
-function renderCameraGrid() {
+async function renderCameraGrid() {
   const grid = document.getElementById("cameraGrid");
   grid.innerHTML = "";
 
-  mockData.cameras.forEach((camera) => {
-    const card = document.createElement("div");
-    card.className = "camera-card glass-card fade-in";
-    card.onclick = () => showViolations(camera.id);
+  fetch(`${apiUrl}cameras/`)
+  .then((response) => response.json())
+  .then((cameras) => {
+    cameras.forEach(async (camera) => {
+      const res = await fetch(`${apiUrl}cameras/${camera.cam_id}/`);
+      const data = await res.json();
 
-    card.innerHTML = `
-                    <div class="violations-badge">${camera.violations}</div>
-                    <div class="camera-id">${camera.id}</div>
-                    <div class="camera-location">${camera.location}</div>
-                    <div class="camera-coordinates">${camera.coordinates}</div>
-                `;
+      const card = document.createElement("div");
+      card.className = "camera-card glass-card fade-in";
+      card.onclick = () => showViolations(camera.cam_id);
 
-    grid.appendChild(card);
+      card.innerHTML = `
+                      <div class="violations-badge">${data.count}</div>
+                      <div class="camera-id">${camera.cam_id}</div>
+                      <div class="camera-location">${camera.location_name}</div>
+                      <div class="camera-coordinates">${camera.coordinates}</div>
+                  `;
+
+      grid.appendChild(card);
+    });
   });
 }
 

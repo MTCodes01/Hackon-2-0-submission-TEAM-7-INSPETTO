@@ -5,7 +5,7 @@ from datetime import datetime
 # 1. DATABASE CONNECTION CONFIG
 config = {
     'user': 'root',
-    'password': 'nandu',  # <--- CHANGE THIS
+    'password': 'password',  # <--- CHANGE THIS
     'host': 'localhost'
 }
 
@@ -16,7 +16,7 @@ TABLES = {}
 
 TABLES['users'] = """
 CREATE TABLE IF NOT EXISTS users (
-    uid VARCHAR(20) PRIMARY KEY,
+    uid INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
     password_hash TEXT NOT NULL,
     role VARCHAR(50) DEFAULT 'officer'
@@ -35,12 +35,6 @@ CREATE TABLE IF NOT EXISTS hubs (
     hub_id VARCHAR(20) PRIMARY KEY,
     cam_id VARCHAR(20),
     timestamp DATETIME,
-    chip_id VARCHAR(20),
-    plate_from_chip VARCHAR(20),
-    plate_from_image VARCHAR(20),
-    chassis_no VARCHAR(30),
-    tampering_detected BOOLEAN,
-    reason TEXT,
     FOREIGN KEY (cam_id) REFERENCES cameras(cam_id)
 );"""
 
@@ -101,6 +95,7 @@ CREATE TABLE IF NOT EXISTS hub_logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     hub_id VARCHAR(40),
     chip_id VARCHAR(20),
+    rssi INT,
     timestamp DATETIME,
     FOREIGN KEY (chip_id) REFERENCES vehicles(chip_id),
     FOREIGN KEY (hub_id) REFERENCES hubs(hub_id)
