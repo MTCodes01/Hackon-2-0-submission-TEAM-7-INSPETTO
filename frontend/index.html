@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+    <div style="z-index: -100;" class="anime">
+        <div class="bg">
+            <div class="flare">
+                <div class="grid">
+                    <div style="display: none; opacity: 0; z-index: -1; transition: all 1.5s ease;" class="container1">
+                        <div class="shape-contain">
+                            <div class="shape"></div>
+                            <div class="shape"></div>
+                            <div class="shape"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage" class="page active">
+            <div class="login-container">
+                <div class="login-card glass">
+                    <div class="login-header">
+                        <h1>Inspetto</h1>
+                        <p>Access Portal</p>
+                    </div>
+
+                    <form class="login-form" id="loginForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" class="form-input"
+                                placeholder="Enter your username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" class="form-input"
+                                placeholder="Enter your password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="rememberMe">
+                                <span class="checkmark"></span>
+                                Remember me
+                            </label>
+                        </div>
+
+                        <button type="submit" class="login-btn">
+                            <span class="btn-text">Sign In</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Page 1: Camera Overview -->
         <div id="page1" class="page active">
             <div class="header">
@@ -18,7 +73,8 @@
 
             <div class="search-container">
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Search by location or camera ID..." id="cameraSearch">
+                    <input type="text" class="search-input" placeholder="Search by location or camera ID..."
+                        id="cameraSearch">
                     <span class="search-icon">🔍</span>
                 </div>
             </div>
@@ -31,7 +87,7 @@
         <!-- Page 2: Violations Table -->
         <div id="page2" class="page">
             <button class="back-btn" onclick="showPage('page1')">← Back to Dashboard</button>
-            
+
             <div class="header">
                 <h1 id="cameraTitle">Camera Violations</h1>
                 <p id="cameraSubtitle">Detailed violation records</p>
@@ -39,7 +95,8 @@
 
             <div class="search-container">
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Search by number plate or timestamp..." id="violationSearch">
+                    <input type="text" class="search-input" placeholder="Search by number plate or timestamp..."
+                        id="violationSearch">
                     <span class="search-icon">🔍</span>
                 </div>
             </div>
@@ -65,7 +122,7 @@
         <!-- Page 3: Profile Page -->
         <div id="page3" class="page">
             <button class="back-btn" onclick="showPage('page2')">← Back to Violations</button>
-            
+
             <div class="header">
                 <h1>Vehicle Owner Profile</h1>
                 <p>Detailed owner and vehicle information</p>
@@ -109,4 +166,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
