@@ -1,0 +1,5 @@
+cam_id,location_name,coordinates,number_plate,confidence,timestamp
+0001,attingal,"700,800",TNATC5369,45,2025-07-12 15:42:36
+0001,attingal,"700,800",PB 19 EQ 0001,50,2025-07-12 15:44:48
+0001,attingal,"700,800",TN 11 C 5169,45,2025-07-12 15:45:06
+0001,attingal,"700,800",TNC5369,40,2025-07-12 15:45:16
