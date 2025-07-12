@@ -92,3 +92,21 @@ def CameraDetail(request, camID):
         return Response({'camID': camID, 'count': count})
     except Camera.DoesNotExist:
         return Response({'error': 'Camera not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+def ViolationDetail(request, camID):
+    try:
+        violations = Violation.objects.filter(cam=camID)
+        serializer = ViolationSerializer(violations, many=True)
+        return Response(serializer.data)
+    except Camera.DoesNotExist:
+        return Response({'error': 'Camera not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+def VehicleDetail(request, chipID):
+    try:
+        vehicle = Vehicle.objects.get(chip_id=chipID)
+        serializer = VehicleSerializer(vehicle)
+        return Response(serializer.data)
+    except Vehicle.DoesNotExist:
+        return Response({'error': 'Vehicle not found'}, status=status.HTTP_404_NOT_FOUND)
