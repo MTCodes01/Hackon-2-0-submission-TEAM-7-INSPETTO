@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
+from .views import login, CameraDetail
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -13,4 +14,9 @@ router.register(r'route-logs', VehicleRouteLogViewSet)
 router.register(r'scan-logs', ScanLogViewSet)
 router.register(r'hub-logs', HubLogViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('login/', login, name='login'),
+    path('cameras/<str:camID>/', CameraDetail, name='camera_detail'),
+]
+
+urlpatterns += router.urls

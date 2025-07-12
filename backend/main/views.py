@@ -1,9 +1,11 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import status
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from .models import *
 from .serializers import *
+from django.views.decorators.csrf import csrf_exempt
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -14,8 +16,8 @@ class UserViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
         
         # Hash the password if it exists
-        if 'password' in data:
-            data['password'] = make_password(data['password'])
+        if 'password_hash' in data:
+            data['password_hash'] = make_password(data['password_hash'])
         
         # Create serializer with modified data
         serializer = self.get_serializer(data=data)
@@ -60,3 +62,33 @@ class ScanLogViewSet(viewsets.ModelViewSet):
 class HubLogViewSet(viewsets.ModelViewSet):
     queryset = HubLog.objects.all()
     serializer_class = HubLogSerializer
+
+@csrf_exempt
+@api_view(['POST'])
+def login(request):
+    print("Received login request:", request.data)
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    if username and password:
+        print(f"Checking for user {username} in database.")
+        user = User.objects.filter(name=username).first()
+        if user:
+            print(f"User {username} found in database. Checking password hash.")
+            if check_password(password, user.password_hash):
+                print(f"User {username} logged in successfully.")
+                serializer = UserSerializer(user)
+                return Response(serializer.data)
+            print(f"Password hash for user {username} did not match.")
+        print(f"User {username} not found in database.")
+    print("Login request failed. Returning 401.")
+    return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+def CameraDetail(request, camID):
+    try:
+        violations = Violation.objects.filter(cam=camID)
+        count = violations.count()
+        return Response({'camID': camID, 'count': count})
+    except Camera.DoesNotExist:
+        return Response({'error': 'Camera not found'}, status=status.HTTP_404_NOT_FOUND)

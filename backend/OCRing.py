@@ -10,7 +10,7 @@ import os
 import datetime
 
 # 📍 Tesseract Path
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'D:\Tesseract-OCR\tesseract.exe'
 state_codes = [
     'AP', 'AR', 'AS', 'BR', 'CG', 'CH', 'DD', 'DL', 'DN', 'GA', 'GJ', 'HP',
     'HR', 'JH', 'JK', 'KA', 'KL', 'LA', 'LD', 'MH', 'ML', 'MN', 'MP', 'MZ',
@@ -32,7 +32,7 @@ MAX_PLATES_TO_STORE = 5  # Number of most recent plates to store and save to CSV
 CSV_FILENAME = "detected_plates.csv"  # Name of the CSV file to save detections
 
 # Camera metadata constants
-CAM_ID = "0001"
+CAM_ID = "CAM001"
 LOCATION_NAME = "attingal"
 COORDINATES = "700,800"
 
@@ -467,6 +467,29 @@ def is_same_plate(plate1, plate2):
         return clean2 in clean1
     else:
         return clean1 in clean2
+    
+def save_to_server(valid_plate):
+    """
+    Save the detected license plates to a public server-side database
+    
+    Args:
+        valid_plate: List of tuples (plate_number, confidence, timestamp)
+    """
+    import requests
+
+    api = "http://127.0.0.1:8000/api/scan-logs/"
+    headers = {'Content-Type': 'application/json'}
+    data = []
+    for plate, conf, timestamp in valid_plate:
+        data.append({
+            'cam': CAM_ID,
+            'plate_no': plate,
+            'confidence': conf,
+            'timestamp': timestamp
+        })
+    requests.post(api, headers=headers, json=data)
+    
+    print(f"[🌐] Saved {len(valid_plate)} license plate(s) to server")
 
 def save_to_csv(valid_plate, filename=CSV_FILENAME):
     """
@@ -587,7 +610,7 @@ def main():
                         result_buffer.append((valid_plate, conf))
                         print(f"[🔍] Found valid plate format after cleanup: {valid_plate}")
                         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        save_to_csv([(valid_plate, conf, timestamp)], CSV_FILENAME)
+                        save_to_server([(valid_plate, conf, timestamp)])
                         print(f"[📝] Saved single detection: {valid_plate} (Conf: {conf:.1f}%)")
 
                         ocr_attempt_count += 1

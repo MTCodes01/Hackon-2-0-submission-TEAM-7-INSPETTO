@@ -27,12 +27,6 @@ class Hub(models.Model):
     hub_id = models.CharField(max_length=20, primary_key=True)
     cam = models.ForeignKey(Camera, on_delete=models.CASCADE, db_column='cam_id')
     timestamp = models.DateTimeField()
-    chip_id = models.CharField(max_length=20)
-    plate_from_chip = models.CharField(max_length=20)
-    plate_from_image = models.CharField(max_length=20)
-    chassis_no = models.CharField(max_length=30)
-    tampering_detected = models.BooleanField()
-    reason = models.TextField()
 
     class Meta:
         managed = False
@@ -105,6 +99,7 @@ class HubLog(models.Model):
     log_id = models.AutoField(primary_key=True)
     hub = models.ForeignKey(Hub, on_delete=models.CASCADE, db_column='hub_id')
     chip = models.ForeignKey(Vehicle, on_delete=models.CASCADE, db_column='chip_id')
+    rssi = models.IntegerField()
     timestamp = models.DateTimeField()
 
     class Meta:
