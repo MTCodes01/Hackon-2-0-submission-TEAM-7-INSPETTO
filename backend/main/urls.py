@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
-from .views import login, CameraDetail
+from .views import login, CameraDetail, ViolationDetail, VehicleDetail
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -16,7 +16,10 @@ router.register(r'hub-logs', HubLogViewSet)
 
 urlpatterns = [
     path('login/', login, name='login'),
-    path('cameras/<str:camID>/', CameraDetail, name='camera_detail'),
+    path('cameras/<str:camID>/', CameraDetail, name='ViolationCount'),
+    path('violations/<str:camID>/', ViolationDetail, name='ViolationDetail'),
+    path('vehicles/<str:chipID>/', VehicleDetail, name='VehicleDetail'),
+
 ]
 
 urlpatterns += router.urls
