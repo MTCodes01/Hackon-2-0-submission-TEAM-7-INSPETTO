@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "django-api.sreedevss.me",
     "sreedevss.me",
+    "sahilakasako.github.io",
 ]
 
 
@@ -52,6 +53,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5500",
     "https://django-api.sreedevss.me",
     "https://sreedevss.me",
+    "https://sahilakasako.github.io",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -59,6 +61,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5500",
     "https://django-api.sreedevss.me",
     "https://sreedevss.me",
+    "https://sahilakasako.github.io",
 ]
 
 MIDDLEWARE = [
