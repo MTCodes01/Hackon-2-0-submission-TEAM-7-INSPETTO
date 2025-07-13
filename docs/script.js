@@ -242,146 +242,6 @@ const mockData = {
         plate: "KA 01 MNO",
         violations: 6,
       },
-      {
-        id: 2,
-        timestamp: "2025-07-12 14:45:00",
-        beacon: "HIJKLM890123",
-        plate: "KL 19 ABC",
-        violations: 4,
-      },
-      {
-        id: 3,
-        timestamp: "2025-07-12 13:30:00",
-        beacon: "NOPQRS456789",
-        plate: "TN 09 STU",
-        violations: 9,
-      },
-      {
-        id: 1,
-        timestamp: "2025-07-12 15:20:00",
-        beacon: "BCDEFG234567",
-        plate: "KA 01 MNO",
-        violations: 6,
-      },
-      {
-        id: 2,
-        timestamp: "2025-07-12 14:45:00",
-        beacon: "HIJKLM890123",
-        plate: "KL 19 ABC",
-        violations: 4,
-      },
-      {
-        id: 3,
-        timestamp: "2025-07-12 13:30:00",
-        beacon: "NOPQRS456789",
-        plate: "TN 09 STU",
-        violations: 9,
-      },
-      {
-        id: 1,
-        timestamp: "2025-07-12 15:20:00",
-        beacon: "BCDEFG234567",
-        plate: "KA 01 MNO",
-        violations: 6,
-      },
-      {
-        id: 2,
-        timestamp: "2025-07-12 14:45:00",
-        beacon: "HIJKLM890123",
-        plate: "KL 19 ABC",
-        violations: 4,
-      },
-      {
-        id: 3,
-        timestamp: "2025-07-12 13:30:00",
-        beacon: "NOPQRS456789",
-        plate: "TN 09 STU",
-        violations: 9,
-      },
-      {
-        id: 1,
-        timestamp: "2025-07-12 15:20:00",
-        beacon: "BCDEFG234567",
-        plate: "KA 01 MNO",
-        violations: 6,
-      },
-      {
-        id: 2,
-        timestamp: "2025-07-12 14:45:00",
-        beacon: "HIJKLM890123",
-        plate: "KL 19 ABC",
-        violations: 4,
-      },
-      {
-        id: 3,
-        timestamp: "2025-07-12 13:30:00",
-        beacon: "NOPQRS456789",
-        plate: "TN 09 STU",
-        violations: 9,
-      },
-      {
-        id: 1,
-        timestamp: "2025-07-12 15:20:00",
-        beacon: "BCDEFG234567",
-        plate: "KA 01 MNO",
-        violations: 6,
-      },
-      {
-        id: 2,
-        timestamp: "2025-07-12 14:45:00",
-        beacon: "HIJKLM890123",
-        plate: "KL 19 ABC",
-        violations: 4,
-      },
-      {
-        id: 3,
-        timestamp: "2025-07-12 13:30:00",
-        beacon: "NOPQRS456789",
-        plate: "TN 09 STU",
-        violations: 9,
-      },
-      {
-        id: 1,
-        timestamp: "2025-07-12 15:20:00",
-        beacon: "BCDEFG234567",
-        plate: "KA 01 MNO",
-        violations: 6,
-      },
-      {
-        id: 2,
-        timestamp: "2025-07-12 14:45:00",
-        beacon: "HIJKLM890123",
-        plate: "KL 19 ABC",
-        violations: 4,
-      },
-      {
-        id: 3,
-        timestamp: "2025-07-12 13:30:00",
-        beacon: "NOPQRS456789",
-        plate: "TN 09 STU",
-        violations: 9,
-      },
-      {
-        id: 1,
-        timestamp: "2025-07-12 15:20:00",
-        beacon: "BCDEFG234567",
-        plate: "KA 01 MNO",
-        violations: 6,
-      },
-      {
-        id: 2,
-        timestamp: "2025-07-12 14:45:00",
-        beacon: "HIJKLM890123",
-        plate: "KL 19 ABC",
-        violations: 4,
-      },
-      {
-        id: 3,
-        timestamp: "2025-07-12 13:30:00",
-        beacon: "NOPQRS456789",
-        plate: "TN 09 STU",
-        violations: 9,
-      },
     ],
   },
   profiles: {
@@ -451,7 +311,7 @@ const mockData = {
   },
 };
 
-let apiUrl = `https://django-api.sreedevss.me/api/`
+let apiUrl = `https://django-api.sreedevss.me/api/`;
 
 let currentCamera = null;
 let currentPlate = null;
@@ -503,7 +363,7 @@ async function handleLogin(e) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
-    })
+    });
 
     const data = await response.json();
 
@@ -532,7 +392,6 @@ async function handleLogin(e) {
     showLoginError("An error occurred. Please try again.");
   }
 }
-
 
 function showLoginError(message) {
   // Remove existing error
@@ -591,26 +450,27 @@ async function renderCameraGrid() {
   grid.innerHTML = "";
 
   fetch(`${apiUrl}cameras/`)
-  .then((response) => response.json())
-  .then((cameras) => {
-    cameras.forEach(async (camera) => {
-      const res = await fetch(`${apiUrl}cameras/${camera.cam_id}/`);
-      const data = await res.json();
+    .then((response) => response.json())
+    .then((cameras) => {
+      cameras.forEach(async (camera) => {
+        const res = await fetch(`${apiUrl}cameras/${camera.cam_id}/`);
+        const data = await res.json();
 
-      const card = document.createElement("div");
-      card.className = "camera-card glass-card fade-in";
-      card.onclick = () => showViolations(camera.cam_id);
+        const card = document.createElement("div");
+        card.className = "camera-card glass-card fade-in";
+        card.onclick = () =>
+          showViolations(camera.cam_id, camera.location_name, data.count);
 
-      card.innerHTML = `
+        card.innerHTML = `
                       <div class="violations-badge">${data.count}</div>
                       <div class="camera-id">${camera.cam_id}</div>
                       <div class="camera-location">${camera.location_name}</div>
                       <div class="camera-coordinates">${camera.coordinates}</div>
                   `;
 
-      grid.appendChild(card);
+        grid.appendChild(card);
+      });
     });
-  });
 }
 
 function filterCameras() {
@@ -625,41 +485,42 @@ function filterCameras() {
   });
 }
 
-function showViolations(cameraId) {
-  currentCamera = cameraId;
-  const camera = mockData.cameras.find((c) => c.id === cameraId);
+function showViolations(id, location, violations) {
+  currentCamera = id;
 
-  document.getElementById(
-    "cameraTitle"
-  ).textContent = `${camera.id} - Violations`;
+  document.getElementById("cameraTitle").textContent = `${id} - Violations`;
   document.getElementById(
     "cameraSubtitle"
-  ).textContent = `${camera.location} • ${camera.violations} violations`;
+  ).textContent = `${location} • ${violations} violations`;
 
-  renderViolationsTable(cameraId);
+  renderViolationsTable(id);
   showPage("page2");
 }
 
-function renderViolationsTable(cameraId) {
+async function renderViolationsTable(cameraId) {
   const tbody = document.getElementById("violationsTableBody");
   tbody.innerHTML = "";
 
-  const violations = mockData.violations[cameraId] || [];
+  const allViolationsResponse = await fetch(`${apiUrl}violations/${cameraId}`);
+  const allViolations = await allViolationsResponse.json();
 
-  violations.forEach((violation) => {
+  for (const violation of allViolations) {
+    const res = await fetch(`${apiUrl}vehicles/${violation.chip}/`);
+    const data = await res.json();
+
     const row = document.createElement("tr");
-    row.onclick = () => showProfile(violation.plate);
+    row.onclick = () => showProfile(data.plate);
 
     row.innerHTML = `
-                    <td>${violation.id}</td>
-                    <td>${violation.timestamp}</td>
-                    <td>${violation.beacon}</td>
-                    <td>${violation.plate}</td>
-                    <td><span class="violation-count">${violation.violations}</span></td>
-                `;
+                <td>${violation.violation_id}</td>
+                <td>${violation.timestamp}</td>
+                <td>${violation.chip}</td>
+                <td>${data.plate_no}</td>
+                <td><span class="violation-count">${allViolations.filter(v => v.chip === violation.chip).length}</span></td>
+            `;
 
     tbody.appendChild(row);
-  });
+  }
 }
 
 function filterViolations() {

@@ -25,14 +25,14 @@ plate_regex = re.compile(plate_pattern)
 
 STABILITY_THRESHOLD = 5
 CONFIDENCE_THRESHOLD = 55
-COOLDOWN_PERIOD = 5.0  # Increased to avoid re-detecting the same plate too soon
-RESULT_BUFFER_SIZE = 5  # Number of OCR results to consider
-MAX_OCR_ATTEMPTS = 5    # Maximum number of OCR attempts before concluding
-MAX_PLATES_TO_STORE = 5  # Number of most recent plates to store and save to CSV
+COOLDOWN_PERIOD = 1.0  # Increased to avoid re-detecting the same plate too soon
+RESULT_BUFFER_SIZE = 1  # Number of OCR results to consider
+MAX_OCR_ATTEMPTS = 1    # Maximum number of OCR attempts before concluding
+MAX_PLATES_TO_STORE = 1  # Number of most recent plates to store and save to CSV
 CSV_FILENAME = "detected_plates.csv"  # Name of the CSV file to save detections
 
 # Camera metadata constants
-CAM_ID = "CAM001"
+CAM_ID = "CAM1506"
 LOCATION_NAME = "attingal"
 COORDINATES = "700,800"
 
@@ -477,17 +477,17 @@ def save_to_server(valid_plate):
     """
     import requests
 
-    api = "http://127.0.0.1:8000/api/scan-logs/"
+    api = "https://django-api.sreedevss.me/api/scan-logs/"
     headers = {'Content-Type': 'application/json'}
-    data = []
+    # data = []
     for plate, conf, timestamp in valid_plate:
-        data.append({
+        data = {
             'cam': CAM_ID,
             'plate_no': plate,
             'confidence': conf,
             'timestamp': timestamp
-        })
-    requests.post(api, headers=headers, json=data)
+        }
+        requests.post(api, headers=headers, json=data)
     
     print(f"[🌐] Saved {len(valid_plate)} license plate(s) to server")
 
@@ -609,9 +609,6 @@ def main():
                         # If we found a valid plate after cleanup, add it to the buffer
                         result_buffer.append((valid_plate, conf))
                         print(f"[🔍] Found valid plate format after cleanup: {valid_plate}")
-                        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        save_to_server([(valid_plate, conf, timestamp)])
-                        print(f"[📝] Saved single detection: {valid_plate} (Conf: {conf:.1f}%)")
 
                         ocr_attempt_count += 1
                         print(f"[🔢] OCR attempt {ocr_attempt_count} of {MAX_OCR_ATTEMPTS}")
@@ -621,6 +618,9 @@ def main():
                         print(f"[🔢] OCR attempt {ocr_attempt_count} of {MAX_OCR_ATTEMPTS} (No valid plate)")
 
                     
+                timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                save_to_server([(valid_plate, conf, timestamp)])
+                print(f"[📝] Saved single detection: {valid_plate} (Conf: {conf:.1f}%)")
                 
                 # Process buffer when we have enough OCR attempts
                 if ocr_attempt_count >= MAX_OCR_ATTEMPTS:

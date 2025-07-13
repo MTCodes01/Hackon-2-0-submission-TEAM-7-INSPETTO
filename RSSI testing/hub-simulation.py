@@ -18,7 +18,7 @@ async def send_data(url, data):
 
 async def main():
     source_url = "https://api-tracking.hard-softwerk.com/rssi-data/E4E1129BDB4D"  # Source API URL
-    destination_url = "http://127.0.0.1:8000/api/hub-logs/"  # Destination API URL
+    destination_url = "https://django-api.sreedevss.me/api/hub-logs/"  # Destination API URL
     
     # Fix the headers - use proper Authorization header format
     headers = {
@@ -46,7 +46,7 @@ async def main():
                     'hub': data['hubReadings'][0]['hubId'],
                     'chip': data['macAddress'],
                     'rssi': data['hubReadings'][0]['rssi'],
-                }
+                }   
 
                 # Send the fetched data to the destination URL
                 await send_data(destination_url, data_to_send)
