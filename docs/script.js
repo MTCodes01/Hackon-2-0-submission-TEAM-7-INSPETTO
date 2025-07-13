@@ -493,35 +493,34 @@ function showViolations(id, location, violations) {
     "cameraSubtitle"
   ).textContent = `${location} • ${violations} violations`;
 
-  renderViolationsTable(id, violations);
+  renderViolationsTable(id);
   showPage("page2");
 }
 
-function renderViolationsTable(cameraId, violationsCount) {
+async function renderViolationsTable(cameraId) {
   const tbody = document.getElementById("violationsTableBody");
   tbody.innerHTML = "";
 
-  fetch(`${apiUrl}violations/${cameraId}`)
-    .then((response) => response.json())
-    .then((violations) => {
-      violations.forEach(async (violation) => {
-        const res = await fetch(`${apiUrl}vehicles/${violation.chip}/`);
-        const data = await res.json();
+  const allViolationsResponse = await fetch(`${apiUrl}violations/${cameraId}`);
+  const allViolations = await allViolationsResponse.json();
 
-        const row = document.createElement("tr");
-        row.onclick = () => showProfile(data.plate);
+  for (const violation of allViolations) {
+    const res = await fetch(`${apiUrl}vehicles/${violation.chip}/`);
+    const data = await res.json();
 
-        row.innerHTML = `
-                    <td>${violation.violation_id}</td>
-                    <td>${violation.timestamp}</td>
-                    <td>${violation.chip}</td>
-                    <td>${data.plate_no}</td>
-                    <td><span class="violation-count">${violationsCount}</span></td>
-                `;
+    const row = document.createElement("tr");
+    row.onclick = () => showProfile(data.plate);
 
-        tbody.appendChild(row);
-      });
-    });
+    row.innerHTML = `
+                <td>${violation.violation_id}</td>
+                <td>${violation.timestamp}</td>
+                <td>${violation.chip}</td>
+                <td>${data.plate_no}</td>
+                <td><span class="violation-count">${allViolations.filter(v => v.chip === violation.chip).length}</span></td>
+            `;
+
+    tbody.appendChild(row);
+  }
 }
 
 function filterViolations() {
